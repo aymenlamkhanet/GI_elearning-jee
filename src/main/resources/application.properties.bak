@@ -1,0 +1,11 @@
+spring.application.name=Gii
+
+server.port=8084
+server.address=0.0.0.0
+
+
+spring.data.mongodb.uri=mongodb://localhost:27017/Gi_projet
+
+
+# Stratégie d'héritage : stocke le type dans le champ _class
+spring.data.mongodb.repository.type-mapping=default
