@@ -1,7 +1,7 @@
 package com.example.Gii.service;
 
-import com.example.Gii.entity.Exercice;
-import com.example.Gii.repository.ExerciceRepository;
+import com.example.Gii.entity.Examen;
+import com.example.Gii.repository.ExamenRepository;
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.model.GridFSUploadOptions;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +24,8 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ExerciceService {
-    private final ExerciceRepository exerciceRepository;
+public class ExamenService {
+    private final ExamenRepository examenRepository;
     private final GridFSBucket gridFSBucket;
     private final String uploadDir = "uploads";
 
@@ -56,33 +56,33 @@ public class ExerciceService {
         gridFSBucket.delete(new ObjectId(fileId));
     }
 
-    public List<Exercice> getAllExercices() {
-        return exerciceRepository.findAll();
+    public List<Examen> getAllExamens() {
+        return examenRepository.findAll();
     }
 
-    public Optional<Exercice> getExerciceById(String id) {
-        return exerciceRepository.findById(id);
+    public Optional<Examen> getExamenById(String id) {
+        return examenRepository.findById(id);
     }
 
-    public List<Exercice> getExercicesByNiveau(String niveau) {
-        return exerciceRepository.findByNiveau(niveau);
+    public List<Examen> getExamensByNiveau(String niveau) {
+        return examenRepository.findByNiveau(niveau);
     }
 
-    public List<Exercice> getExercicesByModule(String module) {
-        return exerciceRepository.findByModule(module);
+    public List<Examen> getExamensByModule(String module) {
+        return examenRepository.findByModule(module);
     }
 
-    public void deleteExercice(String id) {
-        Optional<Exercice> exerciceOpt = exerciceRepository.findById(id);
-        exerciceOpt.ifPresent(exercice -> {
-            if (exercice.getFichierId() != null) {
-                supprimerPdf(exercice.getFichierId());
+    public void deleteExamen(String id) {
+        Optional<Examen> examenOpt = examenRepository.findById(id);
+        examenOpt.ifPresent(examen -> {
+            if (examen.getFichierId() != null) {
+                supprimerPdf(examen.getFichierId());
             }
-            exerciceRepository.deleteById(id);
+            examenRepository.deleteById(id);
         });
     }
 
-    public Exercice ajouterExerciceAvecPdf(Exercice exercice, MultipartFile file) throws IOException {
+    public Examen ajouterExamenAvecPdf(Examen examen, MultipartFile file) throws IOException {
         String fileId = uploadPdf(file);
 
         try {
@@ -92,18 +92,18 @@ public class ExerciceService {
             throw new IOException("Échec de vérification GridFS", e);
         }
 
-        exercice.setFichierId(fileId);
-        exercice.setDate(LocalDateTime.now()); // Date d'ajout
+        examen.setFichierId(fileId);
+        examen.setDate(LocalDateTime.now()); // Date d'ajout
 
-        return exerciceRepository.save(exercice);
+        return examenRepository.save(examen);
     }
 
-    public Exercice updateExerciceAvecPdf(Exercice exercice, MultipartFile file) throws IOException {
-        // First, save the updated exercice data
-        Exercice savedExercice = exerciceRepository.save(exercice);
+    public Examen updateExamenAvecPdf(Examen examen, MultipartFile file) throws IOException {
+        // First, save the updated examen data
+        Examen savedExamen = examenRepository.save(examen);
 
         // Then, handle the file update
-        String fileName = savedExercice.getId() + ".pdf";
+        String fileName = savedExamen.getId() + ".pdf";
         Path filePath = Paths.get(uploadDir, fileName);
 
         // Create directory if it doesn't exist
@@ -115,11 +115,11 @@ public class ExerciceService {
         // Save the new file
         Files.copy(file.getInputStream(), filePath);
 
-        return savedExercice;
+        return savedExamen;
     }
 
-    public Exercice updateExerciceSansPdf(Exercice exercice) {
-        return exerciceRepository.save(exercice);
+    public Examen updateExamenSansPdf(Examen examen) {
+        return examenRepository.save(examen);
     }
 
     public boolean verifyFileExists(String fileId) {

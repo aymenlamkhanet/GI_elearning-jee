@@ -2,54 +2,83 @@ package com.example.Gii.service;
 
 import com.example.Gii.entity.Reponse;
 import com.example.Gii.repository.ReponseRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class ReponseService {
 
     private final ReponseRepository reponseRepository;
+    private final QuestionService questionService;
 
-    // Récupérer toutes les réponses
-    public List<Reponse> getAllReponses() {
-        return reponseRepository.findAll();
+    @Autowired
+    public ReponseService(ReponseRepository reponseRepository, QuestionService questionService) {
+        this.reponseRepository = reponseRepository;
+        this.questionService = questionService;
     }
 
-    // Ajouter une réponse
-    public Reponse addReponse(Reponse reponse) {
-        return reponseRepository.save(reponse);
+    public List<Reponse> getReponsesByQuestionId(String questionId) {
+        return reponseRepository.findByQuestionIdOrderByIsAcceptedDescVoteCountDescDateCreationAsc(questionId);
     }
 
-    // Mettre à jour une réponse existante
-    public Reponse updateReponse(String id, Reponse reponseDetails) {
+    public Reponse createReponse(Reponse reponse) {
+        reponse.setDateCreation(LocalDateTime.now());
+        reponse.setVoteCount(0);
+        reponse.setIsAccepted(false);
+        Reponse savedReponse = reponseRepository.save(reponse);
+
+        questionService.incrementAnswerCount(reponse.getQuestionId());
+        return savedReponse;
+    }
+
+    public void deleteReponse(String id) {
         Optional<Reponse> optionalReponse = reponseRepository.findById(id);
         if (optionalReponse.isPresent()) {
-            Reponse reponse = optionalReponse.get();
-            reponse.setContenu(reponseDetails.getContenu());
-            reponse.setDateCreation(reponseDetails.getDateCreation());
-            return reponseRepository.save(reponse);
-        } else {
-            throw new RuntimeException("Réponse non trouvée avec l'ID : " + id);
+            String questionId = optionalReponse.get().getQuestionId();
+            reponseRepository.deleteById(id);
+            questionService.decrementAnswerCount(questionId);
         }
     }
 
-    // Récupérer une réponse par ID
-    public Reponse getReponseById(String id) {
-        return reponseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Réponse non trouvée avec l'ID : " + id));
+    public Reponse voteReponse(String id, boolean upvote) {
+        Optional<Reponse> optionalReponse = reponseRepository.findById(id);
+        if (optionalReponse.isPresent()) {
+            Reponse reponse = optionalReponse.get();
+            if (upvote) {
+                reponse.setVoteCount(reponse.getVoteCount() + 1);
+            } else {
+                reponse.setVoteCount(reponse.getVoteCount() - 1);
+            }
+            return reponseRepository.save(reponse);
+        }
+        return null;
     }
 
-    // Supprimer une réponse par ID
-    public void deleteReponse(String id) {
-        reponseRepository.deleteById(id);
+    public Reponse acceptReponse(String id, String questionId) {
+        // First unaccept any previously accepted answers
+        List<Reponse> reponses = reponseRepository.findByQuestionIdOrderByIsAcceptedDescVoteCountDescDateCreationAsc(questionId);
+        for (Reponse r : reponses) {
+            if (r.getIsAccepted()) {
+                r.setIsAccepted(false);
+                reponseRepository.save(r);
+            }
+        }
+
+        // Accept the new answer
+        Optional<Reponse> optionalReponse = reponseRepository.findById(id);
+        if (optionalReponse.isPresent()) {
+            Reponse reponse = optionalReponse.get();
+            reponse.setIsAccepted(true);
+            return reponseRepository.save(reponse);
+        }
+        return null;
     }
 
-    // Compter le nombre total de réponses
-    public long countReponses() {
-        return reponseRepository.count();
+    public List<Reponse> getUserReponses(String userId) {
+        return reponseRepository.findByUserIdOrderByDateCreationDesc(userId);
     }
 }

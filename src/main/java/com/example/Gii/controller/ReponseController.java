@@ -2,54 +2,62 @@ package com.example.Gii.controller;
 
 import com.example.Gii.entity.Reponse;
 import com.example.Gii.service.ReponseService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/reponses")
-@RequiredArgsConstructor
-@CrossOrigin("*")
+@RequestMapping("/api")
 public class ReponseController {
 
     private final ReponseService reponseService;
 
-    // Récupérer toutes les réponses
-    @GetMapping("/all")
-    public ResponseEntity<List<Reponse>> getAllReponses() {
-        return ResponseEntity.ok(reponseService.getAllReponses());
+    @Autowired
+    public ReponseController(ReponseService reponseService) {
+        this.reponseService = reponseService;
     }
 
-    // Ajouter une réponse
-    @PostMapping("/add")
-    public ResponseEntity<Reponse> addReponse(@RequestBody Reponse reponse) {
-        return ResponseEntity.ok(reponseService.addReponse(reponse));
+    @GetMapping("/questions/{questionId}/reponses")
+    public ResponseEntity<List<Reponse>> getReponsesByQuestionId(@PathVariable String questionId) {
+        return ResponseEntity.ok(reponseService.getReponsesByQuestionId(questionId));
     }
 
-    // Mettre à jour une réponse existante
-    @PutMapping("/{id}")
-    public ResponseEntity<Reponse> updateReponse(@PathVariable String id, @RequestBody Reponse reponseDetails) {
-        return ResponseEntity.ok(reponseService.updateReponse(id, reponseDetails));
+    @PostMapping("/questions/{questionId}/reponses")
+    public ResponseEntity<Reponse> createReponse(@RequestBody Reponse reponse) {
+        return new ResponseEntity<>(reponseService.createReponse(reponse), HttpStatus.CREATED);
     }
 
-    // Récupérer une réponse par ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Reponse> getReponseById(@PathVariable String id) {
-        return ResponseEntity.ok(reponseService.getReponseById(id));
-    }
-
-    // Supprimer une réponse par ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/reponses/{id}")
     public ResponseEntity<Void> deleteReponse(@PathVariable String id) {
         reponseService.deleteReponse(id);
         return ResponseEntity.noContent().build();
     }
 
-    // Compter le nombre total de réponses
-    @GetMapping("/count")
-    public ResponseEntity<Long> countReponses() {
-        return ResponseEntity.ok(reponseService.countReponses());
+    @PostMapping("/reponses/{id}/upvote")
+    public ResponseEntity<Reponse> upvoteReponse(@PathVariable String id) {
+        Reponse reponse = reponseService.voteReponse(id, true);
+        return reponse != null ? ResponseEntity.ok(reponse) : ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/reponses/{id}/downvote")
+    public ResponseEntity<Reponse> downvoteReponse(@PathVariable String id) {
+        Reponse reponse = reponseService.voteReponse(id, false);
+        return reponse != null ? ResponseEntity.ok(reponse) : ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/questions/{questionId}/reponses/{id}/accept")
+    public ResponseEntity<Reponse> acceptReponse(
+            @PathVariable String id,
+            @PathVariable String questionId) {
+        Reponse reponse = reponseService.acceptReponse(id, questionId);
+        return reponse != null ? ResponseEntity.ok(reponse) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/users/{userId}/reponses")
+    public ResponseEntity<List<Reponse>> getUserReponses(@PathVariable String userId) {
+        return ResponseEntity.ok(reponseService.getUserReponses(userId));
     }
 }

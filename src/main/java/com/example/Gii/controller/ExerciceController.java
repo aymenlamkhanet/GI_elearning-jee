@@ -38,8 +38,8 @@ public class ExerciceController {
                                                     @RequestParam("description") String description,
                                                     @RequestParam("niveau") String niveau,
                                                     @RequestParam("module") String module,
-                                                    @RequestParam("ratingAvg") Long ratingAvg,
-                                                    @RequestParam("date") LocalDateTime date,
+                                                    @RequestParam("ratingAvg") long ratingAvg, // Change from Long to long
+                                                    @RequestParam(value = "date", required = false) LocalDateTime date,
                                                     @RequestParam("file") MultipartFile file) {
         try {
             Exercice exercice = new Exercice();
@@ -47,8 +47,8 @@ public class ExerciceController {
             exercice.setDescription(description);
             exercice.setNiveau(niveau);
             exercice.setModule(module);
-            exercice.setRatingAvg(ratingAvg);
-            exercice.setDate(date);
+            exercice.setRatingAvg(ratingAvg); // Set the rating from the request
+            exercice.setDate(date != null ? date : LocalDateTime.now()); // Use provided date or current time
 
             Exercice savedExercice = exerciceService.ajouterExerciceAvecPdf(exercice, file);
             return ResponseEntity.ok(savedExercice);
@@ -65,6 +65,7 @@ public class ExerciceController {
                                                    @RequestParam("description") String description,
                                                    @RequestParam("niveau") String niveau,
                                                    @RequestParam("module") String module,
+                                                   @RequestParam("ratingAvg") long ratingAvg,
                                                    @RequestParam(value = "file", required = false) MultipartFile file) {
         try {
             // Get the existing exercice
@@ -80,6 +81,7 @@ public class ExerciceController {
             existingExercice.setDescription(description);
             existingExercice.setNiveau(niveau);
             existingExercice.setModule(module);
+            existingExercice.setRatingAvg(ratingAvg);
 
             // Update the exercice in database and handle file if provided
             Exercice updatedExercice = file != null ?
