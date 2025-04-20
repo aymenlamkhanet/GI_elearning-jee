@@ -1,20 +1,19 @@
 package com.example.Gii.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 @Document(collection = "chefs_depart")
 public class ChefDepart extends Utilisateur {
 
-    private String departement;
-
-    public String getDepartement() {
-        return departement;
-    }
-
     // Corrected setter parameter name from 'id' to 'departement'
-    public void setDepartement(String departement) {
-        this.departement = departement;
-    }
+    @Setter
+    @Getter
+    private String departement;
 
     public ChefDepart(String id, String nom, String prenom, String email,
                       String motDePasse, String phone, String departement) {
@@ -22,6 +21,12 @@ public class ChefDepart extends Utilisateur {
         // Initialize the departement field
         this.departement = departement;
     }
+
+    @Getter
+    @Setter
+    @DBRef
+    private List<DocumentPdf> documentsGeres;
+
 
     @Override
     public String toString() {

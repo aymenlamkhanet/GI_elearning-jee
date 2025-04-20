@@ -1,9 +1,16 @@
 package com.example.Gii.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 @Document(collection = "professeurs")
 public class Professeur extends Utilisateur {
+    @Setter
+    @Getter
     private String module;
 
     public Professeur(String id, String nom, String prenom, String email,
@@ -12,13 +19,11 @@ public class Professeur extends Utilisateur {
         this.module = module;
     }
 
-    public String getModule() {
-        return module;
-    }
+    @Getter
+    @Setter
+    @DBRef
+    private List<DocumentPdf> documentsAjoutes;
 
-    public void setModule(String module) {
-        this.module = module;
-    }
 
     @Override
     public String toString() {

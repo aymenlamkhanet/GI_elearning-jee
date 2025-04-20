@@ -1,5 +1,7 @@
 package com.example.Gii.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -7,10 +9,16 @@ import java.time.LocalDateTime;
 
 @Document(collection = "commentaires")
 public class Commentaire {
+    @Setter
+    @Getter
     @Id
     private String id;
 
+    @Setter
+    @Getter
     private String contenu;
+    @Setter
+    @Getter
     private LocalDateTime dateCreation;
 
 
@@ -20,29 +28,16 @@ public class Commentaire {
         this.dateCreation = dateCreation;
     }
 
-    public String getId() {
-        return id;
-    }
+    @Getter
+    @Setter
+    @DBRef
+    private Utilisateur utilisateur; // Auteur
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    @Getter
+    @Setter
+    @DBRef
+    private DocumentPdf document; // Document concerné
 
-    public String getContenu() {
-        return contenu;
-    }
-
-    public void setContenu(String contenu) {
-        this.contenu = contenu;
-    }
-
-    public LocalDateTime getDateCreation() {
-        return dateCreation;
-    }
-
-    public void setDateCreation(LocalDateTime dateCreation) {
-        this.dateCreation = dateCreation;
-    }
 
     @Override
     public String toString() {

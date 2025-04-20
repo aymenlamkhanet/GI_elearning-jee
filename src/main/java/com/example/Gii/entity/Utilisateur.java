@@ -1,19 +1,36 @@
 package com.example.Gii.entity;
 
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 
 @Document(collection = "utilisateurs")
 public abstract class Utilisateur {
 
+    @Setter
+    @Getter
     @Id
     private String id;
+    @Setter
+    @Getter
     private String nom;
+    @Setter
+    @Getter
     private String prenom;
+    @Setter
+    @Getter
     private String email;
+    @Setter
+    @Getter
     private String motDePasse;
+    @Setter
+    @Getter
     private  String phone;
     public Utilisateur(String id, String nom, String prenom, String email, String motDePasse, String phone) {
         this.id = id;
@@ -25,53 +42,22 @@ public abstract class Utilisateur {
 
     }
 
-    public String getId() {
-        return id;
-    }
+    @Getter
+    @Setter
+    @DBRef
+    private List<Commentaire> commentaires;
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    @Getter
+    @Setter
+    @DBRef
+    private List<Question> questions;
 
-    public String getNom() {
-        return nom;
-    }
+    @Getter
+    @Setter
+    @DBRef
+    private List<Reponse> reponses;
 
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
 
-    public String getPrenom() {
-        return prenom;
-    }
-
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getMotDePasse() {
-        return motDePasse;
-    }
-
-    public void setMotDePasse(String motDePasse) {
-        this.motDePasse = motDePasse;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
 
     @Override
     public String toString() {

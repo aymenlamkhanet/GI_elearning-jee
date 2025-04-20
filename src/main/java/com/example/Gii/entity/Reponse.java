@@ -1,20 +1,39 @@
 package com.example.Gii.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
 @Document(collection = "reponses")
 public class Reponse {
+    @Setter
+    @Getter
     @Id
     private String id;
 
+    @Setter
+    @Getter
     private String contenu;
+    @Setter
+    @Getter
     private LocalDateTime dateCreation;
+    @Setter
+    @Getter
     private String userId;
+    @Setter
+    @Getter
     private String userName;
+    @Setter
+    @Getter
     private Integer voteCount = 0;
+    @Setter
+    @Getter
     private Boolean isAccepted = false;
+    @Getter
+    @Setter
     private String questionId;
 
     public Reponse() {
@@ -32,69 +51,17 @@ public class Reponse {
         this.questionId = questionId;
     }
 
-    public String getId() {
-        return id;
-    }
+    @Getter
+    @Setter
+    @DBRef
+    private Utilisateur utilisateur;
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
-    public String getContenu() {
-        return contenu;
-    }
+    @Getter
+    @Setter
+    @DBRef
+    private Question question;
 
-    public void setContenu(String contenu) {
-        this.contenu = contenu;
-    }
-
-    public LocalDateTime getDateCreation() {
-        return dateCreation;
-    }
-
-    public void setDateCreation(LocalDateTime dateCreation) {
-        this.dateCreation = dateCreation;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public Integer getVoteCount() {
-        return voteCount;
-    }
-
-    public void setVoteCount(Integer voteCount) {
-        this.voteCount = voteCount;
-    }
-
-    public Boolean getIsAccepted() {
-        return isAccepted;
-    }
-
-    public void setIsAccepted(Boolean isAccepted) {
-        this.isAccepted = isAccepted;
-    }
-
-    public String getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(String questionId) {
-        this.questionId = questionId;
-    }
 
     @Override
     public String toString() {

@@ -1,5 +1,7 @@
 package com.example.Gii.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -8,7 +10,12 @@ import java.time.LocalDateTime;
 @Document(collection = "cours")
 public class Cours extends DocumentPdf {
 
+    @Getter
+    @Setter
     private String duree;
+
+    @Getter
+    @Setter
     private String liens;
 
     public Cours() {
@@ -22,21 +29,7 @@ public class Cours extends DocumentPdf {
         this.liens = liens;
     }
 
-    public String getDuree() {
-        return duree;
-    }
 
-    public void setDuree(String duree) {
-        this.duree = duree;
-    }
-
-    public String getLiens() {
-        return liens;
-    }
-
-    public void setLiens( String liens) {
-        this.liens = liens;
-    }
 
     @Override
     public String toString() {

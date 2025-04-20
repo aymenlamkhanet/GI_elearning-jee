@@ -1,6 +1,9 @@
 package com.example.Gii.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -8,16 +11,34 @@ import java.util.List;
 
 @Document(collection = "questions")
 public class Question {
+    @Setter
+    @Getter
     @Id
     private String id;
 
+    @Setter
+    @Getter
     private String titre;
+    @Setter
+    @Getter
     private String contenu;
+    @Setter
+    @Getter
     private LocalDateTime dateCreation;
+    @Setter
+    @Getter
     private String userId;
+    @Setter
+    @Getter
     private String userName;
+    @Setter
+    @Getter
     private Integer voteCount = 0;
+    @Setter
+    @Getter
     private Integer answerCount = 0;
+    @Setter
+    @Getter
     private Integer viewCount = 0;
 
     public Question() {
@@ -36,77 +57,16 @@ public class Question {
         this.viewCount = viewCount;
     }
 
-    public String getId() {
-        return id;
-    }
+    @Getter
+    @Setter
+    @DBRef
+    private Utilisateur utilisateur;
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    @Getter
+    @Setter
+    @DBRef
+    private List<Reponse> reponses;
 
-    public String getTitre() {
-        return titre;
-    }
-
-    public void setTitre(String titre) {
-        this.titre = titre;
-    }
-
-    public String getContenu() {
-        return contenu;
-    }
-
-    public void setContenu(String contenu) {
-        this.contenu = contenu;
-    }
-
-    public LocalDateTime getDateCreation() {
-        return dateCreation;
-    }
-
-    public void setDateCreation(LocalDateTime dateCreation) {
-        this.dateCreation = dateCreation;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public Integer getVoteCount() {
-        return voteCount;
-    }
-
-    public void setVoteCount(Integer voteCount) {
-        this.voteCount = voteCount;
-    }
-
-    public Integer getAnswerCount() {
-        return answerCount;
-    }
-
-    public void setAnswerCount(Integer answerCount) {
-        this.answerCount = answerCount;
-    }
-
-    public Integer getViewCount() {
-        return viewCount;
-    }
-
-    public void setViewCount(Integer viewCount) {
-        this.viewCount = viewCount;
-    }
 
     @Override
     public String toString() {

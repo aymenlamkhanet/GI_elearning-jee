@@ -1,9 +1,16 @@
 package com.example.Gii.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 @Document(collection = "etudiants")
 public class Etudiant extends Utilisateur {
+    @Setter
+    @Getter
     private String niveau;  // Attribut spécifique : GI1, GI2 ou GI3
 
     public Etudiant(String id, String nom, String prenom, String email,
@@ -12,13 +19,11 @@ public class Etudiant extends Utilisateur {
         this.niveau = niveau;
     }
 
-    public String getNiveau() {
-        return niveau;
-    }
+    @Getter
+    @Setter
+    @DBRef
+    private List<DocumentPdf> documentsConsultes;
 
-    public void setNiveau(String niveau) {
-        this.niveau = niveau;
-    }
 
     @Override
     public String toString() {

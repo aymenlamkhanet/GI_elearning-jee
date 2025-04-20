@@ -3,13 +3,30 @@ package com.example.Gii.entity;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Document(collection = "ouvrages")
 public class Ouvrage extends DocumentPdf {
 
+    @Getter
+    @Setter
     private Long version;
+
+    @Getter
+    @Setter
     private String datePublication;
+
+    @Getter
+    @Setter
     private Long nbrPages;
+
+    @Getter
+    @Setter
     private String domaine;
+
+    @Getter
+    @Setter
     private String reviews;
 
     public Ouvrage() {
@@ -26,45 +43,7 @@ public class Ouvrage extends DocumentPdf {
         this.reviews = reviews;
     }
 
-    public Long getVersion() {
-        return version;
-    }
 
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
-    public String getDatePublication() {
-        return datePublication;
-    }
-
-    public void setDatePublication(String datePublication) {
-        this.datePublication = datePublication;
-    }
-
-    public Long getNbrPages() {
-        return nbrPages;
-    }
-
-    public void setNbrPages(Long nbrPages) {
-        this.nbrPages = nbrPages;
-    }
-
-    public String getDomaine() {
-        return domaine;
-    }
-
-    public void setDomaine(String domaine) {
-        this.domaine = domaine;
-    }
-
-    public String getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(String reviews) {
-        this.reviews = reviews;
-    }
 
     @Override
     public String toString() {

@@ -1,20 +1,39 @@
 package com.example.Gii.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Document(collection = "documents")
 public abstract class DocumentPdf {
+    @Setter
+    @Getter
     @Id
     private String id;
+    @Setter
+    @Getter
     private String titre;
+    @Setter
+    @Getter
     private String description;
+    @Setter
+    @Getter
     private String fichierId; // Lien HTTP vers le PDF
+    @Setter
+    @Getter
     private String niveau; // Gi1, Gi2, Gi3
+    @Setter
+    @Getter
     private String module;
+    @Setter
+    @Getter
     private long ratingAvg;
+    @Setter
+    @Getter
     private LocalDateTime date;
 
     public DocumentPdf(String id, String titre, String description, String fichierId, String niveau, String module) {
@@ -41,69 +60,26 @@ public abstract class DocumentPdf {
     public DocumentPdf() {
     }
 
-    public String getId() {
-        return id;
-    }
+    @Getter
+    @Setter
+    @DBRef
+    private Professeur professeur; // Ajouté par
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    @Getter
+    @Setter
+    @DBRef
+    private ChefDepart chefDepart; // Gestionné par
 
-    public String getTitre() {
-        return titre;
-    }
+    @Getter
+    @Setter
+    @DBRef
+    private List<Etudiant> consultéPar; // Liste d'étudiants qui l'ont consulté
 
-    public void setTitre(String titre) {
-        this.titre = titre;
-    }
+    @Getter
+    @Setter
+    @DBRef
+    private List<Commentaire> commentaires; // Liste des commentaires associés
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getFichierId() {
-        return fichierId;
-    }
-
-    public void setFichierId(String fichierId) {
-        this.fichierId = fichierId;
-    }
-
-    public String getNiveau() {
-        return niveau;
-    }
-
-    public void setNiveau(String niveau) {
-        this.niveau = niveau;
-    }
-
-    public String getModule() {
-        return module;
-    }
-
-    public void setModule(String module) {
-        this.module = module;
-    }
-
-    public long getRatingAvg() {
-        return ratingAvg;
-    }
-
-    public void setRatingAvg(long ratingAvg) {
-        this.ratingAvg = ratingAvg;
-    }
-
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
 
     @Override
     public String toString() {
