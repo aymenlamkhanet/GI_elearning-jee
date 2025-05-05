@@ -15,6 +15,7 @@ public abstract class Utilisateur {
     private String email;
     private String motDePasse;
     private  String phone;
+
     public Utilisateur(String id, String nom, String prenom, String email, String motDePasse, String phone) {
         this.id = id;
         this.nom = nom;
@@ -23,6 +24,10 @@ public abstract class Utilisateur {
         this.motDePasse = motDePasse;
         this.phone = phone;
 
+    }
+
+    public Utilisateur() {
+        super();
     }
 
     public String getId() {

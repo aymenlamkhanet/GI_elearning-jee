@@ -12,6 +12,10 @@ public class Etudiant extends Utilisateur {
         this.niveau = niveau;
     }
 
+    public Etudiant() {
+        super();
+    }
+
     public String getNiveau() {
         return niveau;
     }
