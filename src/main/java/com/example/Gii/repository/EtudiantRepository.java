@@ -8,5 +8,6 @@ import java.util.List;
 public interface EtudiantRepository extends MongoRepository<Etudiant, String> {
     List<Etudiant> findByNiveau(String niveau);
     Optional<Etudiant> findByEmail(String email);
+    List<Etudiant> findTop5ByOrderByIdDesc();
 }
 

@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +37,20 @@ public class OuvrageService {
 
     public List<String> getAllDistinctModules() {
         return ouvrageRepository.findDistinctModules();
+    }
+
+    public Long countOuvrages() {
+        return ouvrageRepository.count();
+    }
+
+    public Map<String, Object> getOuvrageStatistics() {
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalOuvrages", countOuvrages());
+        return stats;
+    }
+
+    public List<Ouvrage> getRecentOuvrages() {
+        return ouvrageRepository.findTop5ByOrderByIdDesc();
     }
 
     public ResponseEntity<byte[]> getPdf(String id) {

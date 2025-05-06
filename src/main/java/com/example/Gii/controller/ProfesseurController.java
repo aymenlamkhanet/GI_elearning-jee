@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+import java.util.Map;
 @RestController
 @RequestMapping("/api/professeur")
 @RequiredArgsConstructor
@@ -55,5 +55,16 @@ public class ProfesseurController {
     @GetMapping("/count")
     public ResponseEntity<Long> countProfesseur() {
         return ResponseEntity.ok(professeurService.countProfesseurs());
+    }
+
+
+    @GetMapping("/recent")
+    public ResponseEntity<List<Professeur>> getRecentProfessors() {
+        return ResponseEntity.ok(professeurService.getRecentProfessors());
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Object>> getProfessorStats() {
+        return ResponseEntity.ok(professeurService.getProfessorStatistics());
     }
 }

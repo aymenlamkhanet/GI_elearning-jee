@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -57,5 +59,20 @@ public class ProfesseurService {
     // Compter le nombre de professeurs
     public Long countProfesseurs() {
         return professeurRepository.count();
+    }
+
+    public List<Professeur> getRecentProfessors() {
+        return professeurRepository.findTop5ByOrderByIdDesc();
+    }
+
+    // Basic stats (can be extended later)
+    public Map<String, Object> getProfessorStatistics() {
+        Long totalProfessors = countProfesseurs();
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalProfessors", totalProfessors);
+
+        // You can add department distribution or other stats here later
+        return stats;
     }
 }

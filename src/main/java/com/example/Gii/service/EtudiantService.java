@@ -4,7 +4,8 @@ import com.example.Gii.entity.Etudiant;
 import com.example.Gii.repository.EtudiantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
 @Service
@@ -17,6 +18,10 @@ public class EtudiantService {
         return etudiantRepository.findByNiveau(niveau);
     }
 
+
+    public Long countEtudiants() {
+        return etudiantRepository.count();
+    }
 
     // retourner tous les etudiants
     public List<Etudiant> getAllEtudiants() {
@@ -35,6 +40,21 @@ public class EtudiantService {
             throw new IllegalArgumentException("Le niveau est obligatoire");
         }
         return etudiantRepository.save(etudiant);
+    }
+
+    public List<Etudiant> getRecentStudents() {
+        return etudiantRepository.findTop5ByOrderByIdDesc(); // fallback if no createdAt
+    }
+
+    // Basic stats (can be extended later)
+    public Map<String, Object> getStudentStatistics() {
+        Long totalStudents = etudiantRepository.count();
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalStudents", totalStudents);
+
+        // You can add gender distribution or other stats here later
+        return stats;
     }
 
 
@@ -65,10 +85,7 @@ public class EtudiantService {
         etudiantRepository.deleteById(id);
     }
 
-    //compter le nbr des etudiants
-    public Long countEtudiants() {
-        return etudiantRepository.count();
-    }
+
 
 
 }

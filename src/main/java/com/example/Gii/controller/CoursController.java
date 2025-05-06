@@ -1,16 +1,19 @@
 package com.example.Gii.controller;
+
+
 import com.example.Gii.entity.Cours;
 import com.example.Gii.service.CoursService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/cours")
@@ -138,5 +141,20 @@ public class CoursController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("ID invalide");
         }
+    }
+
+    @GetMapping("/recent")
+    public ResponseEntity<List<Cours>> getRecentCourses() {
+        return ResponseEntity.ok(coursService.getRecentCourses());
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Object>> getCourseStats() {
+        return ResponseEntity.ok(coursService.getCourseStatistics());
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countExercise() {
+        return ResponseEntity.ok(coursService.countExamens());
     }
 }

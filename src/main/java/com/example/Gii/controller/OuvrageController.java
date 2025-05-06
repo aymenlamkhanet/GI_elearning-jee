@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 import java.time.LocalDateTime;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/ouvrages")
@@ -23,6 +25,23 @@ public class OuvrageController {
     @GetMapping("/modules/distinct")
     public ResponseEntity<List<String>> getDistinctModules() {
         return ResponseEntity.ok(ouvrageService.getAllDistinctModules());
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countOuvrages() {
+        return ResponseEntity.ok(ouvrageService.countOuvrages());
+    }
+
+    // 3. Get stats
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Object>> getOuvrageStats() {
+        return ResponseEntity.ok(ouvrageService.getOuvrageStatistics());
+    }
+
+    // 4. Get recent ouvrages
+    @GetMapping("/recent")
+    public ResponseEntity<List<Ouvrage>> getRecentOuvrages() {
+        return ResponseEntity.ok(ouvrageService.getRecentOuvrages());
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -21,6 +21,8 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
+import java.util.HashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +37,10 @@ public class ExamenService {
             ObjectId fileId = gridFSBucket.uploadFromStream(file.getOriginalFilename(), inputStream, options);
             return fileId.toHexString();
         }
+    }
+
+    public Long countExamens() {
+        return examenRepository.count();
     }
 
     public ResponseEntity<byte[]> getPdf(String id) {
@@ -128,5 +134,20 @@ public class ExamenService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("ID de fichier invalide: " + fileId);
         }
+    }
+
+    public List<Examen> getRecentExams() {
+        return examenRepository.findTop5ByOrderByIdDesc();
+    }
+
+    // New method: Get exam statistics
+    public Map<String, Object> getExamStatistics() {
+        Long totalExams = examenRepository.count();
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalExams", totalExams);
+
+        // You can expand this later (e.g., by date, status, etc.)
+        return stats;
     }
 }

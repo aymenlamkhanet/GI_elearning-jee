@@ -11,6 +11,7 @@ public interface ProfesseurRepository extends MongoRepository<Professeur, String
 
     Optional<Professeur> findByEmail(String email);
     List<Professeur> findByModule(String module);
+    List<Professeur> findTop5ByOrderByIdDesc();
 
 
 }

@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +21,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.HashMap;
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -144,6 +147,25 @@ public class CoursService {
      */
     public Cours updateCoursSansPdf(Cours cours) {
         return coursRepository.save(cours);
+    }
+
+    public List<Cours> getRecentCourses() {
+        return coursRepository.findTop5ByOrderByIdDesc();
+    }
+
+    // New method: Get course stats
+    public Map<String, Object> getCourseStatistics() {
+        Long totalCourses = coursRepository.count();
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalCourses", totalCourses);
+
+        // You can expand this later (e.g., by module, rating, etc.)
+        return stats;
+    }
+
+    public Long countExamens() {
+        return coursRepository.count();
     }
 }
 

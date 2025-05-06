@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -102,5 +104,15 @@ public class ReportService {
     // Count reports by status
     public Long countReportsByStatus(String status) {
         return (long) reportRepository.findByStatus(status).size();
+    }
+
+    public Map<String, Object> getReportStatistics() {
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalReports", countReports());
+        return stats;
+    }
+
+    public List<Report> getRecentReports() {
+        return reportRepository.findTop5ByOrderByIdDesc();
     }
 }

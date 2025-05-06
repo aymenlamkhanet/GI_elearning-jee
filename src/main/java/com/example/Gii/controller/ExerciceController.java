@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/exercices")
@@ -129,5 +131,22 @@ public class ExerciceController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("ID invalide");
         }
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countExercices() {
+        return ResponseEntity.ok(exerciceService.countExercices());
+    }
+
+    // 3. Get stats
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Object>> getExerciceStats() {
+        return ResponseEntity.ok(exerciceService.getExerciceStatistics());
+    }
+
+    // 4. Get recent exercices
+    @GetMapping("/recent")
+    public ResponseEntity<List<Exercice>> getRecentExercices() {
+        return ResponseEntity.ok(exerciceService.getRecentExercices());
     }
 }

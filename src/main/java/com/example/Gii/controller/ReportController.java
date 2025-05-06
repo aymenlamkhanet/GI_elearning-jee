@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/report")
@@ -96,5 +98,15 @@ public class ReportController {
     @GetMapping("/count/status/{status}")
     public ResponseEntity<Long> countReportsByStatus(@PathVariable String status) {
         return ResponseEntity.ok(reportService.countReportsByStatus(status));
+    }
+
+    @GetMapping("/recent")
+    public ResponseEntity<List<Report>> getRecentReports() {
+        return ResponseEntity.ok(reportService.getRecentReports());
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Object>> getReportStats() {
+        return ResponseEntity.ok(reportService.getReportStatistics());
     }
 }

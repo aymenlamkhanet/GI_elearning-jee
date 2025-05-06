@@ -17,4 +17,6 @@ public interface OuvrageRepository extends MongoRepository<Ouvrage, String> {
     @Aggregation("{ $group: { _id: '$module' } }")
     List<String> findDistinctModules();
 
+    List<Ouvrage> findTop5ByOrderByIdDesc();
+
 }

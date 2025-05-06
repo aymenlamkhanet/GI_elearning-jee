@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/examens")
@@ -24,6 +26,8 @@ public class ExamenController {
     public ResponseEntity<List<Examen>> getAllExamens() {
         return ResponseEntity.ok(examenService.getAllExamens());
     }
+
+
 
     // Récupérer un examen par ID
     @GetMapping("/{id}")
@@ -129,5 +133,20 @@ public class ExamenController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("ID invalide");
         }
+    }
+
+    @GetMapping("/recent")
+    public ResponseEntity<List<Examen>> getRecentExams() {
+        return ResponseEntity.ok(examenService.getRecentExams());
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Object>> getExamStats() {
+        return ResponseEntity.ok(examenService.getExamStatistics());
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countExamens() {
+        return ResponseEntity.ok(examenService.countExamens());
     }
 }

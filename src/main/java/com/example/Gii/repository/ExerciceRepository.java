@@ -10,4 +10,5 @@ import java.util.List;
 public interface ExerciceRepository extends MongoRepository<Exercice, String> {
     List<Exercice> findByNiveau(String niveau);
     List<Exercice> findByModule(String module);
+    List<Exercice> findTop5ByOrderByIdDesc();
 }

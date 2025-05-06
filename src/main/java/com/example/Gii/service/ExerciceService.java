@@ -21,6 +21,8 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -96,6 +98,20 @@ public class ExerciceService {
         exercice.setDate(LocalDateTime.now()); // Date d'ajout
 
         return exerciceRepository.save(exercice);
+    }
+
+    public Long countExercices() {
+        return exerciceRepository.count();
+    }
+
+    public Map<String, Object> getExerciceStatistics() {
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalExercices", countExercices());
+        return stats;
+    }
+
+    public List<Exercice> getRecentExercices() {
+        return exerciceRepository.findTop5ByOrderByIdDesc();
     }
 
     public Exercice updateExerciceAvecPdf(Exercice exercice, MultipartFile file) throws IOException {

@@ -13,4 +13,5 @@ public interface ReportRepository extends MongoRepository<Report, String> {
     List<Report> findByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
     List<Report> findByAuthorIdAndStatus(String authorId, String status);
     Optional<Report> findByTitle(String title);
+    List<Report> findTop5ByOrderByIdDesc();
 }

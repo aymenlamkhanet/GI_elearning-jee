@@ -10,4 +10,5 @@ import java.util.List;
 public interface ExamenRepository extends MongoRepository<Examen, String> {
     List<Examen> findByNiveau(String niveau);
     List<Examen> findByModule(String module);
+    List<Examen> findTop5ByOrderByIdDesc();
 }
