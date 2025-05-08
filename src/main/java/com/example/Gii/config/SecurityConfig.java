@@ -4,6 +4,8 @@ import com.example.Gii.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -14,10 +16,12 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Autowired
@@ -26,16 +30,46 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
-                .csrf(csrf -> csrf.disable()) // Disable CSRF for JWT
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        // Public endpoints
                         .requestMatchers(
                                 "/auth/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
 
+                        // Student-specific endpoints
+                        .requestMatchers(HttpMethod.GET, "/api/etudiant/**")
+                        .hasAnyAuthority("ROLE_ETUDIANT", "ROLE_PROFESSEUR", "ROLE_CHEF_DEPART")
+                        .requestMatchers(HttpMethod.PUT, "/api/etudiant/**")
+                        .hasAnyAuthority("ROLE_ETUDIANT", "ROLE_CHEF_DEPART")
+
+                        // Professor-specific personal endpoints (ADDED)
+                        .requestMatchers(HttpMethod.GET, "/api/professeur/**")
+                        .hasAnyAuthority("ROLE_PROFESSEUR", "ROLE_CHEF_DEPART")
+                        .requestMatchers(HttpMethod.PUT, "/api/professeur/**")
+                        .hasAnyAuthority("ROLE_PROFESSEUR", "ROLE_CHEF_DEPART")
+
+                        // Professor teaching resources endpoints
+                        .requestMatchers(HttpMethod.GET, "/api/examen/**", "/api/cours/**", "/api/exercise/**")
+                        .hasAnyAuthority("ROLE_PROFESSEUR", "ROLE_CHEF_DEPART")
+                        .requestMatchers(HttpMethod.POST, "/api/examen/**", "/api/cours/**", "/api/exercise/**")
+                        .hasAnyAuthority("ROLE_PROFESSEUR", "ROLE_CHEF_DEPART")
+                        .requestMatchers(HttpMethod.PUT, "/api/examen/**", "/api/cours/**", "/api/exercise/**")
+                        .hasAnyAuthority("ROLE_PROFESSEUR", "ROLE_CHEF_DEPART")
+                        .requestMatchers(HttpMethod.DELETE, "/api/examen/**", "/api/cours/**", "/api/exercise/**")
+                        .hasAnyAuthority("ROLE_PROFESSEUR", "ROLE_CHEF_DEPART")
+
+                        // Chef Department general access
+                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyAuthority("ROLE_CHEF_DEPART")
+                        .requestMatchers(HttpMethod.POST, "/api/**").hasAnyAuthority("ROLE_CHEF_DEPART")
+                        .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyAuthority("ROLE_CHEF_DEPART")
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasAnyAuthority("ROLE_CHEF_DEPART")
+
+                        // Any other request
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -47,9 +81,11 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of("http://localhost:3000")); // Your frontend URL
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true); // Required for cookies/session
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
+        config.setExposedHeaders(Arrays.asList("Authorization"));
+        config.setAllowCredentials(true);
+        config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
