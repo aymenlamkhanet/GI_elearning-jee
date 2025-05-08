@@ -83,19 +83,7 @@ public class AuthController {
 
             return ResponseEntity.ok(response);
         }
-        // For testing the chef departement role
-        else if (authRequest.getEmail().equals("aymen.lamkhanet.0707@gmail.com") && "102030".equals(authRequest.getMotDePasse())) {
-            String token = jwtUtil.generateToken(authRequest.getEmail());
 
-            Map<String, Object> response = new HashMap<>();
-            response.put("token", token);
-            response.put("id", "admin");
-            response.put("nom", "Admin");
-            response.put("type", "chef_departement");
-            response.put("role", "ROLE_CHEF_DEPART");
-
-            return ResponseEntity.ok(response);
-        }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
     }

@@ -57,13 +57,6 @@ public class JwtUtil {
         }
 
 
-        // If it's not one of the above, assume admin for now
-        if (!etudiant.isPresent() && !professeur.isPresent() && email.equals("admin@example.com")) {
-            claims.put("role", "ROLE_CHEF_DEPART");
-            claims.put("userId", "admin");
-            claims.put("name", "Admin");
-        }
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(email)

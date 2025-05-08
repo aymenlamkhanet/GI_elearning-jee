@@ -95,14 +95,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-
-            // For now, hardcode an admin for testing
-            if (email.equals("admin@example.com")) {
-                authorities.add(new SimpleGrantedAuthority("ROLE_CHEF_DEPART"));
-                setAuthentication(request, email, authorities);
-                filterChain.doFilter(request, response);
-                return;
-            }
         }
 
         filterChain.doFilter(request, response);

@@ -35,10 +35,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
-                        // Role-specific endpoint access
-                        .requestMatchers("/AdminDashboard/**").hasRole("CHEF_DEPART")
-                        .requestMatchers("/ProfDashboard/**").hasRole("PROFESSEUR")
-                        .requestMatchers("/forum/**").authenticated()
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
