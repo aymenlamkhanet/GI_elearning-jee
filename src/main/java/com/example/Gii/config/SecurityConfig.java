@@ -41,6 +41,7 @@ public class SecurityConfig {
                                 "/v3/api-docs/**"
                         ).permitAll()
 
+
                         // Student-specific endpoints
                         .requestMatchers(HttpMethod.GET, "/api/etudiant/**")
                         .hasAnyAuthority("ROLE_ETUDIANT", "ROLE_PROFESSEUR", "ROLE_CHEF_DEPART")
@@ -63,11 +64,19 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/examen/**", "/api/cours/**", "/api/exercise/**")
                         .hasAnyAuthority("ROLE_PROFESSEUR", "ROLE_CHEF_DEPART")
 
+
+                        .requestMatchers(HttpMethod.GET, "/api/commentaire/**","/api/questions/**","/api/res/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/commentaire/**","/api/questions/**","/api/res/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/commentaire/**","/api/questions/**","/api/res/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/commentaire/**","/api/questions/**","/api/res/**").permitAll()
+
                         // Chef Department general access
                         .requestMatchers(HttpMethod.GET, "/api/**").hasAnyAuthority("ROLE_CHEF_DEPART")
                         .requestMatchers(HttpMethod.POST, "/api/**").hasAnyAuthority("ROLE_CHEF_DEPART")
                         .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyAuthority("ROLE_CHEF_DEPART")
                         .requestMatchers(HttpMethod.DELETE, "/api/**").hasAnyAuthority("ROLE_CHEF_DEPART")
+
+
 
                         // Any other request
                         .anyRequest().authenticated()
