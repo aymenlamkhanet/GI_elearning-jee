@@ -47,6 +47,8 @@ public class AuthController {
         Optional<Professeur> professeur = professeurRepository.findByEmail(authRequest.getEmail());
         Optional<ChefDepart> chefDepart = chefDepartRepository.findByEmail(authRequest.getEmail());
 
+        // In AuthController.java, modify the login response
+        // In AuthController.java
         if (etudiant.isPresent() && passwordEncoder.matches(authRequest.getMotDePasse(), etudiant.get().getMotDePasse())) {
             String token = jwtUtil.generateToken(authRequest.getEmail());
 
@@ -56,6 +58,12 @@ public class AuthController {
             response.put("nom", etudiant.get().getNom());
             response.put("type", "etudiant");
             response.put("role", "ROLE_ETUDIANT");
+            response.put("fireScore", etudiant.get().getFireScore());
+            response.put("contentInteractions", etudiant.get().getContentInteractions());
+            response.put("forumContributions", etudiant.get().getForumContributions());
+            response.put("accountCreationDate", etudiant.get().getAccountCreationDate());
+            response.put("lastActiveDate", etudiant.get().getLastActiveDate());
+
 
             return ResponseEntity.ok(response);
         }
