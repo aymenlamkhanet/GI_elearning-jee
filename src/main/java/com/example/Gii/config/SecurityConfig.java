@@ -41,42 +41,50 @@ public class SecurityConfig {
                                 "/v3/api-docs/**"
                         ).permitAll()
 
-
                         // Student-specific endpoints
                         .requestMatchers(HttpMethod.GET, "/api/etudiant/**")
                         .hasAnyAuthority("ROLE_ETUDIANT", "ROLE_PROFESSEUR", "ROLE_CHEF_DEPART")
                         .requestMatchers(HttpMethod.PUT, "/api/etudiant/**")
                         .hasAnyAuthority("ROLE_ETUDIANT", "ROLE_CHEF_DEPART")
 
-                        // Professor-specific personal endpoints (ADDED)
+                        // Professor-specific personal endpoints
                         .requestMatchers(HttpMethod.GET, "/api/professeur/**")
                         .hasAnyAuthority("ROLE_PROFESSEUR", "ROLE_CHEF_DEPART")
                         .requestMatchers(HttpMethod.PUT, "/api/professeur/**")
                         .hasAnyAuthority("ROLE_PROFESSEUR", "ROLE_CHEF_DEPART")
 
-                        // Professor teaching resources endpoints
-                        .requestMatchers(HttpMethod.GET, "/api/examen/**", "/api/cours/**", "/api/exercise/**")
+                        // Teaching resources endpoints - allow students to view
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/exercices/**", "/api/cours/**", "/api/examens/**",
+                                "/api/exercise/**", "/api/cours/**", "/api/examen/**") // support both plural forms
+                        .hasAnyAuthority("ROLE_ETUDIANT", "ROLE_PROFESSEUR", "ROLE_CHEF_DEPART")
+
+                        // Teaching resources modification - professors only
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/exercices/**", "/api/cours/**", "/api/examens/**",
+                                "/api/exercise/**", "/api/cours/**", "/api/examen/**")
                         .hasAnyAuthority("ROLE_PROFESSEUR", "ROLE_CHEF_DEPART")
-                        .requestMatchers(HttpMethod.POST, "/api/examen/**", "/api/cours/**", "/api/exercise/**")
+                        .requestMatchers(HttpMethod.PUT,
+                                "/api/exercices/**", "/api/cours/**", "/api/examens/**",
+                                "/api/exercise/**", "/api/cours/**", "/api/examen/**")
                         .hasAnyAuthority("ROLE_PROFESSEUR", "ROLE_CHEF_DEPART")
-                        .requestMatchers(HttpMethod.PUT, "/api/examen/**", "/api/cours/**", "/api/exercise/**")
-                        .hasAnyAuthority("ROLE_PROFESSEUR", "ROLE_CHEF_DEPART")
-                        .requestMatchers(HttpMethod.DELETE, "/api/examen/**", "/api/cours/**", "/api/exercise/**")
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/api/exercices/**", "/api/cours/**", "/api/examens/**",
+                                "/api/exercise/**", "/api/cours/**", "/api/examen/**")
                         .hasAnyAuthority("ROLE_PROFESSEUR", "ROLE_CHEF_DEPART")
 
-
-                        .requestMatchers(HttpMethod.GET, "/api/commentaire/**","/api/questions/**","/api/res/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/commentaire/**","/api/questions/**","/api/res/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/commentaire/**","/api/questions/**","/api/res/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/commentaire/**","/api/questions/**","/api/res/**").permitAll()
+                        // Comments, questions, resources - public (as per your config)
+                        .requestMatchers("/api/commentaire/**","/api/questions/**","/api/res/**").permitAll()
 
                         // Chef Department general access
-                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyAuthority("ROLE_CHEF_DEPART")
-                        .requestMatchers(HttpMethod.POST, "/api/**").hasAnyAuthority("ROLE_CHEF_DEPART")
-                        .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyAuthority("ROLE_CHEF_DEPART")
-                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasAnyAuthority("ROLE_CHEF_DEPART")
-
-
+                        .requestMatchers(HttpMethod.GET, "/api/**")
+                        .hasAnyAuthority("ROLE_CHEF_DEPART","ROLE_PROFESSEUR","ROLE_ETUDIANT")
+                        .requestMatchers(HttpMethod.POST, "/api/**")
+                        .hasAnyAuthority("ROLE_CHEF_DEPART")
+                        .requestMatchers(HttpMethod.PUT, "/api/**")
+                        .hasAnyAuthority("ROLE_CHEF_DEPART")
+                        .requestMatchers(HttpMethod.DELETE, "/api/**")
+                        .hasAnyAuthority("ROLE_CHEF_DEPART")
 
                         // Any other request
                         .anyRequest().authenticated()
